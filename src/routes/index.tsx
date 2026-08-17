@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Clapperboard, Gauge, Headphones, MonitorPlay } from "lucide-react";
 
 import { Backdrop } from "@/components/rdx/Backdrop";
+import { Navbar } from "@/components/rdx/Navbar";
 import { Hero } from "@/components/rdx/Hero";
 import { DownloaderPanel } from "@/components/rdx/DownloaderPanel";
 
@@ -40,10 +41,11 @@ function Index() {
   return (
     <main className="relative min-h-screen pb-24">
       <Backdrop />
+      <Navbar />
       <Hero />
       <DownloaderPanel />
 
-      <section className="mx-auto mt-24 max-w-5xl px-4">
+      <section id="features" className="mx-auto mt-24 max-w-5xl px-4">
         <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
           Kyun <span className="rdx-flame-text">RDX</span>?
         </h2>
@@ -63,7 +65,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto mt-24 max-w-4xl px-4">
+      <section id="how" className="mx-auto mt-24 max-w-4xl px-4">
         <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">Kaise chalayein</h2>
         <ol className="mt-8 grid gap-4 sm:grid-cols-3">
           {STEPS.map((s, i) => (
