@@ -77,6 +77,90 @@ export type MediaItem = {
   size?: string;
 };
 
+export type SongHit = {
+  videoId: string;
+  title: string;
+  channel: string;
+  duration: string;
+  thumbnail: string;
+  url: string;
+};
+
+function sliceJson(src: string, start: number): string | null {
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  for (let i = start; i < src.length; i++) {
+    const c = src[i]!;
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === "\\") esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') inStr = true;
+    else if (c === "{") depth++;
+    else if (c === "}") {
+      depth--;
+      if (depth === 0) return src.slice(start, i + 1);
+    }
+  }
+  return null;
+}
+
+export async function searchYoutube(query: string): Promise<SongHit[]> {
+  const res = await fetch(
+    `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=EgIQAQ%253D%253D`,
+    {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    },
+  );
+  const html = await res.text();
+  const hits: SongHit[] = [];
+  const seen = new Set<string>();
+  const marker = '"videoRenderer":';
+  let idx = html.indexOf(marker);
+  while (idx !== -1 && hits.length < 18) {
+    const raw = sliceJson(html, idx + marker.length);
+    idx = html.indexOf(marker, idx + marker.length);
+    if (!raw) continue;
+    let v: any;
+    try {
+      v = JSON.parse(raw);
+    } catch {
+      continue;
+    }
+    const id = v?.videoId;
+    if (!id || seen.has(id)) continue;
+    const title = v?.title?.runs?.[0]?.text ?? v?.title?.simpleText;
+    if (!title) continue;
+    seen.add(id);
+    hits.push({
+      videoId: id,
+      title,
+      channel: v?.ownerText?.runs?.[0]?.text ?? v?.longBylineText?.runs?.[0]?.text ?? "YouTube",
+      duration: v?.lengthText?.simpleText ?? "",
+      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      url: `https://www.youtube.com/watch?v=${id}`,
+    });
+  }
+  if (!hits.length) throw new Error("Koi song nahi mila. Naam thoda change kar ke try karein.");
+  return hits;
+}
+
+type _Unused = {
+  title: string;
+  thumbnail?: string;
+  type: "audio" | "video" | "image";
+  url: string;
+  label: string;
+  size?: string;
+};
+
 export async function fetchTiktok(url: string): Promise<MediaItem[]> {
   const json = await post("tiktok", { url });
   const r = json?.data?.result;
