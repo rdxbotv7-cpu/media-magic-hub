@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 
 export type ResultMedia = {
   title: string;
-  thumbnail?: string;
+  thumbnail?: string | undefined;
   type: "audio" | "video" | "image";
   url: string;
   label: string;
-  size?: string;
-  channel?: string;
+  size?: string | undefined;
+  channel?: string | undefined;
 };
 
 function Bars() {
