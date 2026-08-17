@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   startTask,
   readTask,
+  searchYoutube,
   fetchTiktok,
   fetchInstagram,
   fetchFacebook,
@@ -26,7 +27,7 @@ export const startYoutube = createServerFn({ method: "POST" })
 
 export const startMusicSearch = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ query: z.string().min(2) }).parse(d))
-  .handler(async ({ data }) => startTask("playmusic", { query: data.query }));
+  .handler(async ({ data }) => searchYoutube(data.query));
 
 export const getTask = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ id: z.string().min(4) }).parse(d))
