@@ -152,15 +152,6 @@ export async function searchYoutube(query: string): Promise<SongHit[]> {
   return hits;
 }
 
-type _Unused = {
-  title: string;
-  thumbnail?: string;
-  type: "audio" | "video" | "image";
-  url: string;
-  label: string;
-  size?: string;
-};
-
 export async function fetchTiktok(url: string): Promise<MediaItem[]> {
   const json = await post("tiktok", { url });
   const r = json?.data?.result;
