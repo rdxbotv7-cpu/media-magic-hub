@@ -8,7 +8,7 @@ import { DownloaderPanel } from "@/components/rdx/DownloaderPanel";
 
 const TITLE = "RDX Downloaders — YouTube, TikTok, Instagram & FB Video Downloader";
 const DESC =
-  "RDX Downloaders se YouTube MP3/MP4, TikTok no-watermark, Instagram aur Facebook videos preview karein aur free HD download karein.";
+  "RDX Downloaders lets you preview and free download YouTube MP3/MP4, TikTok no-watermark, Instagram and Facebook videos in HD.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,16 +25,16 @@ export const Route = createFileRoute("/")({
 });
 
 const FEATURES = [
-  { icon: MonitorPlay, title: "Preview First", text: "Download se pehle video dekhein ya audio sunein." },
-  { icon: Headphones, title: "MP3 + MP4", text: "Song ko audio ya full video dono format me lein." },
-  { icon: Gauge, title: "HD Quality", text: "360p se 1080p tak apni marzi ki quality chunein." },
-  { icon: Clapperboard, title: "No Watermark", text: "TikTok clips bilkul saaf, bina watermark ke." },
+  { icon: MonitorPlay, title: "Preview First", text: "Watch the video or listen to audio before downloading." },
+  { icon: Headphones, title: "MP3 + MP4", text: "Grab any song as audio or as a full video file." },
+  { icon: Gauge, title: "HD Quality", text: "Pick your quality, from 360p all the way to 1080p." },
+  { icon: Clapperboard, title: "No Watermark", text: "TikTok clips come out perfectly clean, no watermark." },
 ];
 
 const STEPS = [
-  "Platform chunein aur link paste karein (ya song ka naam likhein).",
-  "Get Media dabayein — server file render karega.",
-  "Player me preview karein aur Download button se save karein.",
+  "Choose a platform and paste the link (or type a song name).",
+  "Hit Download — the server renders your file.",
+  "Preview it in the player and save it with the Download button.",
 ];
 
 function Index() {
@@ -47,7 +47,7 @@ function Index() {
 
       <section id="features" className="mx-auto mt-24 max-w-5xl px-4">
         <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
-          Kyun <span className="rdx-flame-text">RDX</span>?
+          Why <span className="rdx-flame-text">RDX</span>?
         </h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, text }) => (
@@ -66,7 +66,7 @@ function Index() {
       </section>
 
       <section id="how" className="mx-auto mt-24 max-w-4xl px-4">
-        <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">Kaise chalayein</h2>
+        <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">How it works</h2>
         <ol className="mt-8 grid gap-4 sm:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s} className="rdx-glass rounded-2xl p-6">
@@ -80,7 +80,7 @@ function Index() {
       <footer className="mt-24 text-center text-sm text-muted-foreground">
         <p className="font-display tracking-widest">RDX DOWNLOADERS</p>
         <p className="mt-2 px-4">
-          Sirf personal use ke liye — copyright content download karna aap ki zimmedari hai.
+          For personal use only — downloading copyrighted content is your own responsibility.
         </p>
       </footer>
     </main>
