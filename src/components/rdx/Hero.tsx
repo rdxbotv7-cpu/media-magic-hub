@@ -14,8 +14,8 @@ export function Hero() {
       </h1>
 
       <p className="rdx-rise mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
-        YouTube, TikTok, Instagram aur Facebook — link paste karein ya song ka naam search karein,
-        preview dekhein aur HD me download karein.
+        YouTube, TikTok, Instagram and Facebook — paste a link or search a song by name, preview it
+        instantly and download in HD.
       </p>
 
       <div className="rdx-rise mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground sm:text-sm">
