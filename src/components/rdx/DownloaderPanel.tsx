@@ -73,7 +73,7 @@ export function DownloaderPanel() {
       if (!text) throw new Error("empty");
       setValue(text.trim());
     } catch {
-      toast.error("Clipboard access nahi mila — manually paste karein.");
+      toast.error("Clipboard access denied — please paste manually.");
     }
   };
 
@@ -84,15 +84,15 @@ export function DownloaderPanel() {
       setProgress((p) => Math.min(95, p + 4));
       const state = await runTask({ data: { id: taskId } });
       if (state.status === "completed") return state;
-      if (state.status === "failed") throw new Error(state.error || "Task fail ho gaya.");
+      if (state.status === "failed") throw new Error(state.error || "Task failed.");
     }
-    throw new Error("Server ne bohot der laga di. Dobara koshish karein.");
+    throw new Error("The server took too long. Please try again.");
   };
 
   const downloadYoutube = async (url: string, fmt: "mp3" | "mp4") => {
     const task = await runYoutube({ data: { url, format: fmt, quality } });
     const state = await poll(task.taskId);
-    if (!state?.mediaUrl) throw new Error("Media link nahi mila.");
+    if (!state?.mediaUrl) throw new Error("No media link found.");
     setResults([
       {
         title: state.title ?? "Media",
@@ -112,10 +112,10 @@ export function DownloaderPanel() {
     try {
       await downloadYoutube(hit.url, fmt);
       setProgress(100);
-      toast.success("Ready! Preview karein aur download karein.");
-      document.getElementById("rdx-results")?.scrollIntoView({ behavior: "smooth" });
+      toast.success("Ready! Preview it and download.");
+      document.getElementById("rdx-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Kuch ghalat ho gaya.");
+      toast.error(err instanceof Error ? err.message : "Something went wrong.");
       setProgress(0);
     } finally {
       setBusyId(null);
@@ -139,8 +139,9 @@ export function DownloaderPanel() {
         setResults(items as ResultMedia[]);
       }
       setProgress(100);
+      document.getElementById("rdx-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Kuch ghalat ho gaya.");
+      toast.error(err instanceof Error ? err.message : "Something went wrong.");
       setProgress(0);
     } finally {
       setLoading(false);
@@ -151,6 +152,14 @@ export function DownloaderPanel() {
 
   return (
     <section id="downloader" className="mx-auto w-full max-w-5xl px-4">
+      {results.length > 0 && (
+        <div id="rdx-results" className="mb-6 grid gap-5 sm:grid-cols-2">
+          {results.map((m, i) => (
+            <MediaResult key={`${m.url}-${i}`} media={m} />
+          ))}
+        </div>
+      )}
+
       <div className="rdx-glass overflow-hidden rounded-2xl">
         {/* platform bar */}
         <div className="flex overflow-x-auto border-b border-border">
@@ -190,22 +199,20 @@ export function DownloaderPanel() {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder={
-                  isSearch ? "Song ka naam likhein, e.g. Pasoori" : `${mode} ka link paste karein`
+                  isSearch ? "Type a song name, e.g. Pasoori" : `Paste your ${mode} link here`
                 }
                 className="h-13 rounded-xl border-border bg-background/60 pr-24 pl-12 text-base"
                 required
               />
               <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
-                {value && (
-                  <button
-                    type="button"
-                    aria-label="Clear"
-                    onClick={reset}
-                    className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  aria-label="Clear"
+                  onClick={reset}
+                  className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
                 <button
                   type="button"
                   onClick={paste}
@@ -267,7 +274,7 @@ export function DownloaderPanel() {
             <div className="space-y-2">
               <Progress value={progress} className="h-1.5" />
               <p className="text-center text-xs text-muted-foreground">
-                Server file tayyar kar raha hai — thoda intezaar karein.
+                The server is preparing your file — please wait a moment.
               </p>
             </div>
           )}
@@ -324,13 +331,6 @@ export function DownloaderPanel() {
         </div>
       )}
 
-      {results.length > 0 && (
-        <div id="rdx-results" className="mt-8 grid gap-5 sm:grid-cols-2">
-          {results.map((m, i) => (
-            <MediaResult key={`${m.url}-${i}`} media={m} />
-          ))}
-        </div>
-      )}
     </section>
   );
 }
